@@ -2,7 +2,8 @@
 
 Welcome to the **Pickit Desktop** application documentation. This guide provides an overview of the app, deployment options for Windows and macOS, installer flags, required permissions, auto-update behavior, and recommended best practices for your IT team.
 
-> **Current Version:** 1.3.1 (released 2025-05-22)
+Latest version when this document was written is **1.3.1** (released **2025-05-22**).
+You can find the latest version here: [https://github.com/pickit-dev/pickit-desktop-releases/releases](https://github.com/pickit-dev/pickit-desktop-releases/releases)
 
 ## Table of Contents
 
@@ -26,8 +27,6 @@ Welcome to the **Pickit Desktop** application documentation. This guide provides
 
 Pickit Desktop is a cross-platform Electron application for quickly accessing and managing digital assets on Windows and macOS. By default, it opens in a classic window, but you can switch to tray mode if you prefer. It supports silent installation, auto-update, drag-and-drop workflows, and file synchronization.
 
-This document corresponds to **version 1.3.1**, which was published on **2025-05-22**.
-
 ---
 
 ## Deployment Overview
@@ -41,8 +40,6 @@ This document corresponds to **version 1.3.1**, which was published on **2025-05
 ## Windows Installer (NSIS)
 
 Pickit Desktop’s Windows installer uses NSIS. You can control installation behavior via command-line flags.
-
-> **Note:** The actual installer filename for this release is **`Pickit-Setup-1.3.1.exe`**. Whenever you see `PickitSetup.exe` in the examples below, replace it with the current versioned filename (e.g., `Pickit-Setup-1.3.1.exe`).
 
 ### Supported Flags
 
@@ -128,7 +125,7 @@ Function .onInit
 FunctionEnd
 ```
 
-In the rest of your script, conditionally wrap the relevant sections:
+In the rest of your script, wrap the relevant sections accordingly:
 
 ```nsis
 Section "Create Shortcuts"
@@ -280,17 +277,6 @@ Users on Windows or macOS receive version 1.3.1 automatically when they launch P
 
 * **Electron-builder macOS configuration** (entitlements, hardened runtime, DMG layout):
   [https://www.electron.build/configuration/mac](https://www.electron.build/configuration/mac)
-
-* **GitHub Release artifacts** (verify the uploaded installers and metadata):
-  Navigate to your repository’s **Releases** tab and confirm you see:
-
-  ```
-  latest.yml                 (version: 1.3.1)
-  latest-mac.yml             (version: 1.3.1)
-  Pickit-1.3.1.dmg
-  Pickit-1.3.1-arm64.dmg
-  Pickit-Setup-1.3.1.exe
-  ```
 
 ---
 
