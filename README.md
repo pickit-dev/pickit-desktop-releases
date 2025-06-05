@@ -2,7 +2,7 @@
 
 Welcome to the **Pickit Desktop** application documentation. This guide provides an overview of the app, deployment options for Windows and macOS, installer flags, required permissions, auto-update behavior, and recommended best practices for your IT team.
 
-Latest version when this document was written is **1.3.1** (released **2025-05-22**).
+Current version when this document was written is **1.3.1** (released **2025-05-22**).
 You can find the latest version here: [https://github.com/pickit-dev/pickit-desktop-releases/releases](https://github.com/pickit-dev/pickit-desktop-releases/releases)
 
 ## Table of Contents
