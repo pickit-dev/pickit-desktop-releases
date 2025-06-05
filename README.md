@@ -10,16 +10,14 @@ You can find the latest version here: [https://github.com/pickit-dev/pickit-desk
 1. [Introduction](#introduction)
 2. [Deployment Overview](#deployment-overview)
 3. [Windows Installer (NSIS)](#windows-installer-nsis)
-
-   * [Supported Flags](#supported-flags)
-   * [Usage Examples](#usage-examples)
-   * [Custom Flag Implementation](#custom-flag-implementation)
-4. [macOS Installation & Permissions](#macos-installation--permissions)
-
-   * [Built-in Entitlements](#built-in-entitlements)
-   * [Configuration Profiles (MDM)](#configuration-profiles-mdm)
-5. [Auto-Updates](#auto-updates)
-6. [Appendix & References](#appendix--references)
+    - [Supported Flags](#supported-flags)
+    - [Usage Examples](#usage-examples)
+    - [Custom Flag Implementation](#custom-flag-implementation)
+1. [macOS Installation & Permissions](#macos-installation--permissions)
+    - [Built-in Entitlements](#built-in-entitlements)
+    - [Configuration Profiles (MDM)](#configuration-profiles-mdm)
+1. [Auto-Updates](#auto-updates)
+2. [Appendix & References](#appendix--references)
 
 ---
 
@@ -31,9 +29,9 @@ Pickit Desktop is a cross-platform Electron application for quickly accessing an
 
 ## Deployment Overview
 
-* **Windows**: Distributed as an NSIS installer (`Pickit-Setup-1.3.1.exe`). Supports both interactive and silent modes with customizable command-line flags.
-* **macOS**: Packaged as `.dmg` (x64 and arm64), hardened, and notarized. Requires system entitlements and optional MDM profiles for privacy permissions.
-* **Auto-Updates**: Updates are downloaded and installed automatically in the background; no manual intervention from the end user is required.
+- **Windows**: Distributed as an NSIS installer (`Pickit-Setup-1.3.1.exe`). Supports both interactive and silent modes with customizable command-line flags.
+- **macOS**: Packaged as `.dmg` (x64 and arm64), hardened, and notarized. Requires system entitlements and optional MDM profiles for privacy permissions.
+- **Auto-Updates**: Updates are downloaded and installed automatically in the background; no manual intervention from the end user is required.
 
 ---
 
@@ -43,7 +41,7 @@ Pickit Desktop’s Windows installer uses NSIS. You can control installation beh
 
 ### Supported Flags
 
-| Flag                       | Description                                                                    | Example                                                      |
+| **Flag**                   | **Description**                                                                | **Example**                                                  |
 | -------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------ |
 | `/S`                       | **Silent install**—runs without any UI (must be the first flag)                | `Pickit-Setup-1.3.1.exe /S`                                  |
 | `/D=<install_dir>`         | **Target directory** (only valid in silent mode; must be last flag, no quotes) | `Pickit-Setup-1.3.1.exe /S /D=C:\Program Files\Pickit`       |
@@ -54,10 +52,10 @@ Pickit Desktop’s Windows installer uses NSIS. You can control installation beh
 | `/LANG=<language_code>`    | Choose UI language (if multiple languages are compiled into the installer)     | `Pickit-Setup-1.3.1.exe /S /D=C:\Pickit /LANG=sv`            |
 
 > **Notes:**
->
-> * Built-in NSIS flags are `/S` and `/D=`.
-> * Custom flags (those beginning with `--`) must be explicitly parsed in the installer script.
-> * Ensure that `/D=<install_dir>` is placed last when used.
+
+- > Built-in NSIS flags are `/S` and `/D=`.
+- > Custom flags (those beginning with `--`) must be explicitly parsed in the installer script.
+- > Ensure that `/D=<install_dir>` is placed last when used.
 
 ---
 
@@ -65,19 +63,19 @@ Pickit Desktop’s Windows installer uses NSIS. You can control installation beh
 
 #### 1. Silent installation to Program Files
 
-```powershell
+```other
 Start-Process -FilePath "\\share\Pickit-Setup-1.3.1.exe" -ArgumentList "/S", "/D=C:\Program Files\Pickit" -Wait
 ```
 
 #### 2. Silent install without shortcuts or autostart
 
-```powershell
+```other
 Start-Process -FilePath "\\share\Pickit-Setup-1.3.1.exe" -ArgumentList "/S", "--no-desktop-shortcut", "--no-start-menu-shortcut", "--no-autostart" -Wait
 ```
 
 #### 3. Silent install with log file for troubleshooting
 
-```powershell
+```other
 Start-Process -FilePath "\\share\Pickit-Setup-1.3.1.exe" -ArgumentList "/S", "--log=C:\temp\pickit-install.log" -Wait
 ```
 
@@ -87,7 +85,7 @@ Start-Process -FilePath "\\share\Pickit-Setup-1.3.1.exe" -ArgumentList "/S", "--
 
 Below is an example snippet for parsing custom flags in the NSIS installer. Include this in the **`.onInit`** section so you can conditionally skip creating shortcuts, disabling autostart, or writing a log file.
 
-```nsis
+```other
 !include "LogicLib.nsh"
 
 Var NoDesktopShortcut
@@ -127,7 +125,7 @@ FunctionEnd
 
 In the rest of your script, wrap the relevant sections accordingly:
 
-```nsis
+```other
 Section "Create Shortcuts"
   ${If} ${Not} $NoDesktopShortcut
     ; create desktop shortcut here
@@ -183,11 +181,11 @@ Below is the exact `entitlements.mac.plist` used in version **1.3.1**. This file
 </plist>
 ```
 
-* **com.apple.security.cs.allow-jit**: Allows just-in-time compilation.
-* **com.apple.security.cs.allow-unsigned-executable-memory**: Permits loading unsigned executable memory.
-* **com.apple.security.files.user-selected.read-write**: Grants the app permission to read/write files chosen by the user.
-* **com.apple.security.cs.allow-dyld-environment-variables**: Allows setting certain environment variables.
-* **com.apple.security.cs.disable-library-validation**: Permits loading non-Apple-signed code (e.g., native modules).
+- **com.apple.security.cs.allow-jit**: Allows just-in-time compilation.
+- **com.apple.security.cs.allow-unsigned-executable-memory**: Permits loading unsigned executable memory.
+- **com.apple.security.files.user-selected.read-write**: Grants the app permission to read/write files chosen by the user.
+- **com.apple.security.cs.allow-dyld-environment-variables**: Allows setting certain environment variables.
+- **com.apple.security.cs.disable-library-validation**: Permits loading non-Apple-signed code (e.g., native modules).
 
 ---
 
@@ -235,48 +233,30 @@ If you manage macOS devices via an MDM (e.g., Jamf, Microsoft Intune, Workspace 
 </plist>
 ```
 
-* **SystemPolicyNetworkClient** (`com.apple.security.privacy.network.client`): Grants unrestricted outbound network access (required for sync and auto-update).
-* **SystemPolicyFilesUserSelectedReadWrite** (`com.apple.security.privacy.files.user-selected.read-write`): Allows the user to pick files in Finder dialogs, and for the app to read/write them.
-* **Identifier (bundleID)**: Must match the app’s bundle ID (`com.pickit.app`).
+- **SystemPolicyNetworkClient** (`com.apple.security.privacy.network.client`): Grants unrestricted outbound network access (required for sync and auto-update).
+- **SystemPolicyFilesUserSelectedReadWrite** (`com.apple.security.privacy.files.user-selected.read-write`): Allows the user to pick files in Finder dialogs, and for the app to read/write them.
+- **Identifier (bundleID)**: Must match the app’s bundle ID (`com.pickit.app`).
 
-Deploy this `.mobileconfig` alongside your `.dmg` via your MDM of choice. Since the DMG is already notarized, macOS will trust it—once installed, the app will start with these permissions granted.
+Deploy this `.mobileconfig` alongside your `.dmg` via your MDM of choice. Since the DMG is already notarized, macOS will trust it, once installed, the app will start with these permissions granted.
 
 ---
 
 ## Auto-Updates
 
-Pickit Desktop automatically checks for and installs updates in the background. Updates download and install silently; the user is prompted to restart only if required. No additional scripts or manual steps are needed—updates just happen.
-
-* Two YAML files are generated and uploaded to GitHub under the Release tab for version 1.3.1:
-
-  * **`latest.yml`** (for Windows)
-  * **`latest-mac.yml`** (for macOS)
-* Both files include:
-
-  * **version**: `1.3.1`
-  * **file URLs**:
-
-    * Windows: `Pickit-Setup-1.3.1.exe` + `Pickit-Setup-1.3.1.exe.blockmap`
-    * macOS x64: `Pickit-1.3.1.dmg` + `Pickit-1.3.1.dmg.blockmap`
-    * macOS arm64: `Pickit-1.3.1-arm64.dmg` + `Pickit-1.3.1-arm64.dmg.blockmap`
-
-Users on Windows or macOS receive version 1.3.1 automatically when they launch Pickit Desktop (provided they are online).
+Pickit Desktop automatically checks for and installs updates in the background. Updates download and install silently, the user is prompted to restart only if required. No additional scripts or manual steps are needed, updates just happen.
 
 ---
 
 ## Appendix & References
 
-* **NSIS command-line docs** (how to parse and handle flags):
-  [https://nsis.sourceforge.io/Docs/Chapter4.html#section4.1](https://nsis.sourceforge.io/Docs/Chapter4.html#section4.1)
-
-* **Apple Developer PPPC documentation** (for in-depth details on privacy entitlements and MDM profiles):
-  [https://developer.apple.com/documentation/macos-release-notes/](https://developer.apple.com/documentation/macos-release-notes/)
-
-* **Electron-builder NSIS configuration** (details on Windows/NSIS settings):
-  [https://www.electron.build/configuration/nsis](https://www.electron.build/configuration/nsis)
-
-* **Electron-builder macOS configuration** (entitlements, hardened runtime, DMG layout):
-  [https://www.electron.build/configuration/mac](https://www.electron.build/configuration/mac)
+- **NSIS command-line docs** (how to parse and handle flags):
+[https://nsis.sourceforge.io/Docs/Chapter4.html#section4.1](https://nsis.sourceforge.io/Docs/Chapter4.html#section4.1)
+- **Apple Developer PPPC documentation** (for in-depth details on privacy entitlements and MDM profiles):
+[https://developer.apple.com/documentation/macos-release-notes/](https://developer.apple.com/documentation/macos-release-notes/)
+- **Electron-builder NSIS configuration** (details on Windows/NSIS settings):
+[https://www.electron.build/configuration/nsis](https://www.electron.build/configuration/nsis)
+- **Electron-builder macOS configuration** (entitlements, hardened runtime, DMG layout):
+[https://www.electron.build/configuration/mac](https://www.electron.build/configuration/mac)
 
 ---
 
